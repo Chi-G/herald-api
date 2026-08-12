@@ -90,7 +90,7 @@ func (r *NotificationRepository) ListForTenant(ctx context.Context, tenantID uui
 	}
 	defer rows.Close()
 
-	var notifications []*models.Notification
+	notifications := make([]*models.Notification, 0)
 	for rows.Next() {
 		n, err := r.scanRow(rows)
 		if err != nil {
