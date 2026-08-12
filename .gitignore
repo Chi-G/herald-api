@@ -1,0 +1,30 @@
+# Environment & Secret files
+.env
+.env.local
+*.env
+
+# Build outputs & binaries
+bin/
+dist/
+herald
+*.exe
+*.exe.manifest
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go & IDE files
+vendor/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

@@ -1,0 +1,22 @@
+package middleware
+
+import (
+	"log"
+	"time"
+
+	"github.com/gin-gonic/gin"
+)
+
+// Logger provides structured request logging for Gin endpoints.
+func Logger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		path := c.Request.URL.Path
+
+		c.Next()
+
+		latency := time.Since(start)
+		status := c.Writer.Status()
+		log.Printf("[HTTP] %s %s | status: %d | latency: %v", c.Request.Method, path, status, latency)
+	}
+}
