@@ -3,7 +3,7 @@
 ## What this project is
 Herald is a multi-tenant notification & webhook delivery API written in Go, using the
 Gin web framework and PostgreSQL. It sends email/SMS/push notifications on behalf of
-multiple tenant products (AuraMed, StoreCore, Forahia LMS, UpWearLane, Forafix, LedgerCore) and delivers webhook
+multiple tenant products (AuraMed, StoreCore, LMS, UpWearLane, Forafix, LedgerCore) and delivers webhook
 
 callbacks when a notification's status changes.
 

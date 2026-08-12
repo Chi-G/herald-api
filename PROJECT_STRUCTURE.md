@@ -1,7 +1,7 @@
 # Herald — Project Structure & Architecture
 
 Multi-tenant notification & webhook delivery API. Go + Gin + PostgreSQL + goroutine worker pool.
-Serves any client identically: React admin dashboard, Flutter app, or server-to-server (AuraMed, StoreCore, Forahia LMS, UpWearLane, Forafix, LedgerCore).
+Serves any client identically: React admin dashboard, Flutter app, or server-to-server (AuraMed, StoreCore, LMS, UpWearLane, Forafix, LedgerCore).
 
 
 ## Folder layout

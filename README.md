@@ -22,7 +22,7 @@ Herald is structured as a modular 3-repo ecosystem:
 
 ## 🎯 Engine Use Cases
 
-The `Herald-API` engine serves as centralized notification infrastructure across multiple products (such as *AuraMed*, *StoreCore*, *Forahia LMS*, *UpWearLane*, *Forafix*, and *LedgerCore*):
+The `Herald-API` engine serves as centralized notification infrastructure across multiple products (such as *AuraMed*, *StoreCore*, *LMS*, *UpWearLane*, *Forafix*, and *LedgerCore*):
 
 1. **Multi-Tenant Notification Dispatch**:
    Accepts and processes email, SMS, and push notification dispatches scoped by `tenant_id` and authorized via API keys.
