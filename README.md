@@ -15,7 +15,7 @@ Herald is structured as a modular 3-repo ecosystem:
 | Repository | Open Source? | Description & Primary Use-Case |
 | :--- | :--- | :--- |
 | **`Herald-API`** (This Repo) | 🟢 **Open Core (MIT)** | High-throughput Go dispatch engine, in-memory worker pool, raw SQL database layer, and tenant-scoped REST API. |
-| [**`herald-js-client`**](../herald-js-client) | 🟢 **Open Source (MIT)** | Official TypeScript & JavaScript SDK (`@forahia/herald-client`) with typed API bindings and real-time React polling hooks. |
+| [**`herald-js-client`**](../herald-js-client) | 🟢 **Open Source (MIT)** | Official TypeScript & JavaScript SDK (`@chi-g/herald-client`) with typed API bindings and real-time React polling hooks. |
 | [**`herald-cloud`**](../herald-cloud) | 🔴 **SaaS / Commercial** | Admin Dashboard ("Dispatch Tower") for multi-tenant workspace administration, API key management, live feed analytics, and template management. |
 
 ---
@@ -61,4 +61,4 @@ make run
 ---
 
 ## 📄 License
-MIT License &copy; Forahia Solutions.
+MIT License &copy; Chi-G.

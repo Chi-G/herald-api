@@ -7,7 +7,7 @@ const docTemplate = `{
     "schemes": ["http"],
     "swagger": "2.0",
     "info": {
-        "description": "Herald Multi-Tenant Notification & Webhook Delivery API for Forahia Solutions",
+        "description": "Herald Multi-Tenant Notification & Webhook Delivery API for Chi-G",
         "title": "Herald API",
         "version": "1.0.0"
     },
