@@ -20,7 +20,8 @@ type Dependencies struct {
 
 func New(deps Dependencies) *gin.Engine {
 	r := gin.New()
-	r.Use(middleware.Logger(), middleware.Recovery())
+	r.Use(middleware.CORS(), middleware.Logger(), middleware.Recovery())
+
 
 	r.GET("/health", deps.HealthHandler.Check)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

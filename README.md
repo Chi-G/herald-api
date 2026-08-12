@@ -1,73 +1,64 @@
-# Herald
+# Herald API Engine
 
-A multi-tenant notification & webhook delivery API built in Go + Gin, serving as shared infrastructure across Forahia Solutions' public and private applications instead of relying on third-party SaaS like SendGrid or Novu.
+> High-Performance Multi-Tenant Notification & Webhook Delivery Engine built with **Go 1.22+**, **Gin**, and **PostgreSQL**.
 
-> 🚀 **Project Status**: Upcoming release (Active Development). The admin dashboard and frontend integration client are currently being built using **React** (`react-client/`).
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8.svg)](https://golang.org)
+[![Database](https://img.shields.io/badge/PostgreSQL-pgx-blue.svg)](https://github.com/jackc/pgx)
 
-### Connected Tenant Applications
-- **AuraMed** — [auramed.cc](https://auramed.cc)
-- **StoreCore** — *(Not live yet)*
-- **Forahia LMS** — [lms.forahia.com](https://lms.forahia.com)
-- **UpWearLane** — [UpWearLane.com](https://UpWearLane.com)
-- **Forafix** — [forahia.com/forafix](https://forahia.com/forafix)
-- **LedgerCore** — [ledger.forahia.com](https://ledger.forahia.com)
+---
 
+## 🏗️ 3-Repo Open Core Ecosystem
 
+Herald is structured as a modular 3-repo ecosystem:
 
-## What's in this scaffold
+| Repository | Open Source? | Description & Primary Use-Case |
+| :--- | :--- | :--- |
+| **`Herald-API`** (This Repo) | 🟢 **Open Core (MIT)** | High-throughput Go dispatch engine, in-memory worker pool, raw SQL database layer, and tenant-scoped REST API. |
+| [**`herald-js-client`**](../herald-js-client) | 🟢 **Open Source (MIT)** | Official TypeScript & JavaScript SDK (`@forahia/herald-client`) with typed API bindings and real-time React polling hooks. |
+| [**`herald-cloud`**](../herald-cloud) | 🔴 **SaaS / Commercial** | Admin Dashboard ("Dispatch Tower") for multi-tenant workspace administration, API key management, live feed analytics, and template management. |
 
-- `PROJECT_STRUCTURE.md` — full folder layout and architecture rationale
-- `schema.sql` — complete PostgreSQL schema (tenants, api_keys, notifications,
-  notification_attempts, webhooks, webhook_deliveries, rate_limit_configs)
-- `.cursorrules` — rules for Cursor AI to follow this project's conventions
-- `GEMINI.md` — equivalent rules for Gemini CLI / Code Assist
-- `internal/` — the actual Go source, partially scaffolded:
-  - `models/notification.go` — the core struct + request DTO
-  - `worker/pool.go` + `worker/dispatcher.go` — the concurrency engine (goroutines + channels)
-  - `middleware/auth.go` — API key authentication
-  - `handlers/notification_handler.go` — HTTP layer
-  - `router/router.go` — route wiring
-  - `pkg/apierror/errors.go` — standard JSON response envelope
-- `react-client/` — a typed TypeScript client + React hook + example component
-  ready to drop into any of your admin dashboards
+---
 
-## What's NOT scaffolded yet (build these next, in order)
+## 🎯 Engine Use Cases
 
-1. `internal/config/config.go` — env var loading
-2. `internal/database/postgres.go` — pgx connection pool setup
-3. `internal/repository/*.go` — the actual SQL queries (notification_repo.go is
-   referenced by dispatcher.go and the handler — build this next, it's the
-   natural next step and a good place to practice raw SQL in Go)
-4. `internal/service/notification_service.go` — orchestrates repo + worker pool
-5. `internal/worker/providers/email.go` — start with a simple SMTP or Resend adapter
-6. `cmd/server/main.go` — wire everything together and start the server
+The `Herald-API` engine serves as centralized notification infrastructure across multiple products (such as *AuraMed*, *StoreCore*, *Forahia LMS*, *UpWearLane*, *Forafix*, and *LedgerCore*):
 
-## Suggested build order
+1. **Multi-Tenant Notification Dispatch**:
+   Accepts and processes email, SMS, and push notification dispatches scoped by `tenant_id` and authorized via API keys.
+2. **Asynchronous Goroutine Worker Pool**:
+   In-memory buffered channels handle high-concurrency background dispatches with exponential backoff retries without external queue dependencies (no Redis/RabbitMQ required).
+3. **Status Tracking & Webhook Delivery**:
+   Tracks notification lifecycles (`pending` → `queued` → `sending` → `sent`/`failed`) and delivers HMAC-signed webhook callbacks on status changes.
 
-Build bottom-up so each piece is testable in isolation:
-1. `models` -> `repository` (get DB reads/writes working, test with `go run` + psql)
-2. `worker` providers (get one channel, e.g. email, actually sending)
-3. `service` (glue repo + worker together)
-4. `handlers` + `router` + `middleware` (expose it over HTTP)
-5. `cmd/server/main.go` (wire it all up)
-6. React client — point `NotificationSender.example.tsx` at your running server
+---
 
-## Local dev
+## 🏛️ Architecture Rules
+
+1. **Strict 3-Layer Pattern**: `handlers/` (HTTP binding only) → `service/` (business logic) → `repository/` (SQL only with `pgx`).
+2. **Tenant Isolation**: Every database query must scope by `tenant_id`.
+3. **No Global State**: Dependencies are constructed in `cmd/server/main.go` and explicitly passed down.
+
+---
+
+## 🛠️ Local Development & Quick Start
 
 ```bash
-# Start Postgres
+# 1. Start PostgreSQL with Docker
 docker compose up -d postgres
 
-# Run migrations
+# 2. Run Database Schema Migrations
 psql postgresql://herald:herald@localhost:5432/herald -f schema.sql
 
-# Run the server (once main.go exists)
-go run cmd/server/main.go
+# 3. Seed Initial Tenants & API Keys
+psql postgresql://herald:herald@localhost:5432/herald -f seed.sql
+
+# 4. Start Server
+make run
+# Server will start listening on http://localhost:8080
 ```
 
-## Next milestone after v1
+---
 
-Once notifications work end-to-end (create -> dispatch -> status update), the
-natural v2 features are: webhook delivery on status change (HMAC-signed payloads),
-a scheduled-notification cron sweep (`scheduled_at` field is already in the schema),
-and a simple admin dashboard in React showing delivery stats per tenant.
+## 📄 License
+MIT License &copy; Forahia Solutions.
