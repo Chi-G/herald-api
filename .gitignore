@@ -3,6 +3,11 @@
 .env.local
 *.env
 
+# Local seed & test data files
+seed.sql
+*.seed.sql
+
+
 # Build outputs & binaries
 bin/
 dist/

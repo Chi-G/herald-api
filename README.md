@@ -2,6 +2,8 @@
 
 A multi-tenant notification & webhook delivery API built in Go + Gin, serving as shared infrastructure across Forahia Solutions' public and private applications instead of relying on third-party SaaS like SendGrid or Novu.
 
+> 🚀 **Project Status**: Upcoming release (Active Development). The admin dashboard and frontend integration client are currently being built using **React** (`react-client/`).
+
 ### Connected Tenant Applications
 - **AuraMed** — [auramed.cc](https://auramed.cc)
 - **StoreCore** — *(Not live yet)*
@@ -9,6 +11,7 @@ A multi-tenant notification & webhook delivery API built in Go + Gin, serving as
 - **UpWearLane** — [UpWearLane.com](https://UpWearLane.com)
 - **Forafix** — [forahia.com/forafix](https://forahia.com/forafix)
 - **LedgerCore** — [ledger.forahia.com](https://ledger.forahia.com)
+
 
 
 ## What's in this scaffold
