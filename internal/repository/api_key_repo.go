@@ -20,7 +20,6 @@ func NewAPIKeyRepository(db *pgxpool.Pool) *APIKeyRepository {
 	return &APIKeyRepository{db: db}
 }
 
-// FindByHash retrieves an active API key by its SHA-256 hash.
 func (r *APIKeyRepository) FindByHash(ctx context.Context, keyHash string) (*models.APIKey, error) {
 	query := `
 		SELECT id, tenant_id, name, key_hash, key_prefix, is_active, last_used_at, created_at, revoked_at
@@ -48,7 +47,6 @@ func (r *APIKeyRepository) FindByHash(ctx context.Context, keyHash string) (*mod
 	return &k, nil
 }
 
-// TouchLastUsed updates the last_used_at timestamp when a key is authenticated.
 func (r *APIKeyRepository) TouchLastUsed(ctx context.Context, keyID uuid.UUID) error {
 	query := `UPDATE api_keys SET last_used_at = now() WHERE id = $1`
 	_, err := r.db.Exec(ctx, query, keyID)

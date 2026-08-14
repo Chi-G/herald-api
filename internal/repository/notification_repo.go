@@ -22,7 +22,6 @@ func NewNotificationRepository(db *pgxpool.Pool) *NotificationRepository {
 	return &NotificationRepository{db: db}
 }
 
-// Create inserts a new notification record into the database.
 func (r *NotificationRepository) Create(ctx context.Context, n *models.Notification) error {
 	metadataBytes, err := json.Marshal(n.Metadata)
 	if err != nil {
@@ -49,7 +48,6 @@ func (r *NotificationRepository) Create(ctx context.Context, n *models.Notificat
 	return nil
 }
 
-// FindByID retrieves a notification by its ID (used by background workers).
 func (r *NotificationRepository) FindByID(ctx context.Context, id uuid.UUID) (*models.Notification, error) {
 	query := `
 		SELECT id, tenant_id, channel, priority, status, recipient, subject, body,
@@ -61,7 +59,6 @@ func (r *NotificationRepository) FindByID(ctx context.Context, id uuid.UUID) (*m
 	return r.scanRow(r.db.QueryRow(ctx, query, id))
 }
 
-// FindByIDAndTenant retrieves a notification by ID strictly scoped to a tenant_id (security enforcement).
 func (r *NotificationRepository) FindByIDAndTenant(ctx context.Context, tenantID uuid.UUID, id uuid.UUID) (*models.Notification, error) {
 	query := `
 		SELECT id, tenant_id, channel, priority, status, recipient, subject, body,
@@ -73,7 +70,6 @@ func (r *NotificationRepository) FindByIDAndTenant(ctx context.Context, tenantID
 	return r.scanRow(r.db.QueryRow(ctx, query, id, tenantID))
 }
 
-// ListForTenant lists paginated notifications for a specific tenant.
 func (r *NotificationRepository) ListForTenant(ctx context.Context, tenantID uuid.UUID, status string, limit int, offset int) ([]*models.Notification, error) {
 	query := `
 		SELECT id, tenant_id, channel, priority, status, recipient, subject, body,
@@ -101,7 +97,6 @@ func (r *NotificationRepository) ListForTenant(ctx context.Context, tenantID uui
 	return notifications, nil
 }
 
-// UpdateStatus updates the notification status and sets timestamps when sent or failed.
 func (r *NotificationRepository) UpdateStatus(ctx context.Context, id uuid.UUID, status models.NotificationStatus) error {
 	now := time.Now()
 	var sentAt, failedAt *time.Time
@@ -127,7 +122,6 @@ func (r *NotificationRepository) UpdateStatus(ctx context.Context, id uuid.UUID,
 	return nil
 }
 
-// RecordAttempt records a delivery attempt in notification_attempts and increments attempt_count.
 func (r *NotificationRepository) RecordAttempt(ctx context.Context, notificationID uuid.UUID, attemptNumber int, attemptErr error, provider string) error {
 	statusStr := "success"
 	var errMsg *string
@@ -159,7 +153,6 @@ func (r *NotificationRepository) RecordAttempt(ctx context.Context, notification
 	return tx.Commit(ctx)
 }
 
-// helper row scanner
 type rowScanner interface {
 	Scan(dest ...any) error
 }

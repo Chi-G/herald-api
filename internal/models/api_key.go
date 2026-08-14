@@ -6,12 +6,11 @@ import (
 	"github.com/google/uuid"
 )
 
-// APIKey mirrors the `api_keys` table used for tenant authentication.
 type APIKey struct {
 	ID         uuid.UUID  `json:"id" db:"id"`
 	TenantID   uuid.UUID  `json:"tenant_id" db:"tenant_id"`
 	Name       string     `json:"name" db:"name"`
-	KeyHash    string     `json:"-" db:"key_hash"` // Never expose in JSON
+	KeyHash    string     `json:"-" db:"key_hash"` 
 	KeyPrefix  string     `json:"key_prefix" db:"key_prefix"`
 	IsActive   bool       `json:"is_active" db:"is_active"`
 	LastUsedAt *time.Time `json:"last_used_at,omitempty" db:"last_used_at"`

@@ -24,7 +24,6 @@ func NewNotificationService(repo *repository.NotificationRepository, pool *worke
 	}
 }
 
-// CreateAndQueue validates input, persists the notification as pending, and enqueues a worker job.
 func (s *NotificationService) CreateAndQueue(
 	ctx context.Context,
 	tenantID uuid.UUID,
@@ -59,7 +58,6 @@ func (s *NotificationService) CreateAndQueue(
 		return nil, fmt.Errorf("service create notification: %w", err)
 	}
 
-	// Hand off to worker pool asynchronously for background delivery
 	if s.workerPool != nil {
 		s.workerPool.Enqueue(worker.Job{NotificationID: notification.ID})
 	}
@@ -67,12 +65,10 @@ func (s *NotificationService) CreateAndQueue(
 	return notification, nil
 }
 
-// GetForTenant retrieves a notification guaranteeing strict tenant-level data isolation.
 func (s *NotificationService) GetForTenant(ctx context.Context, tenantID uuid.UUID, id uuid.UUID) (*models.Notification, error) {
 	return s.repo.FindByIDAndTenant(ctx, tenantID, id)
 }
 
-// ListForTenant fetches paginated notifications for a tenant with optional status filtering.
 func (s *NotificationService) ListForTenant(ctx context.Context, tenantID uuid.UUID, status string, limitStr string, offsetStr string) ([]*models.Notification, error) {
 	limit, err := strconv.Atoi(limitStr)
 	if err != nil || limit <= 0 {

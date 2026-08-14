@@ -1,4 +1,3 @@
-// Package docs Swagger Specification for Herald API
 package docs
 
 import "github.com/swaggo/swag"
@@ -44,7 +43,7 @@ const docTemplate = `{
                             "required": ["channel", "recipient", "body"],
                             "properties": {
                                 "channel": { "type": "string", "example": "email" },
-                                "recipient": { "type": "string", "example": "patient@auramed.cc" },
+                                "recipient": { "type": "string", "example": "info@auramed.cc" },
                                 "subject": { "type": "string", "example": "Lab Results Ready" },
                                 "body": { "type": "string", "example": "Your medical report is available in AuraMed." },
                                 "priority": { "type": "string", "example": "high" }
@@ -68,7 +67,6 @@ const docTemplate = `{
     }
 }`
 
-// SwaggerInfo holds exported Swagger Info
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
 	Host:             "localhost:8080",

@@ -10,9 +10,6 @@ import (
 	"herald/internal/repository"
 )
 
-// Provider is implemented by every channel adapter (email, sms, push).
-// Any new channel just needs to satisfy this interface — dispatcher.go never
-// changes when you add a new provider, per the open/closed principle.
 type Provider interface {
 	Send(ctx context.Context, n *models.Notification) error
 	Name() string
@@ -27,7 +24,6 @@ func NewDispatcher(repo *repository.NotificationRepository, providers map[models
 	return &Dispatcher{notificationRepo: repo, providers: providers}
 }
 
-// Dispatch sends one notification, retrying with exponential backoff on failure.
 func (d *Dispatcher) Dispatch(ctx context.Context, job Job) {
 	notification, err := d.notificationRepo.FindByID(ctx, job.NotificationID)
 	if err != nil || notification == nil {
@@ -63,7 +59,6 @@ func (d *Dispatcher) Dispatch(ctx context.Context, job Job) {
 
 		d.notificationRepo.UpdateStatus(ctx, notification.ID, models.StatusRetrying)
 
-		// Exponential backoff: 2^attempt seconds (2s, 4s, 8s, 16s...)
 		backoff := time.Duration(math.Pow(2, float64(attempt))) * time.Second
 		select {
 		case <-time.After(backoff):

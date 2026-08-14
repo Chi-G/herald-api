@@ -8,7 +8,6 @@ import (
 	"herald/internal/models"
 )
 
-// EmailProvider implements worker.Provider for email dispatch.
 type EmailProvider struct {
 	// Adapter configuration (e.g. SMTP host/port, API key for Resend/SendGrid) can be added here
 }

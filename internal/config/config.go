@@ -15,7 +15,6 @@ type Config struct {
 	JobBuffer   int
 }
 
-// Load reads configuration from .env file (if present) and environment variables.
 func Load() *Config {
 	if err := godotenv.Load(); err != nil {
 		log.Println("[Config] No .env file found; using default environment settings")

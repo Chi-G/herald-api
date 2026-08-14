@@ -17,7 +17,6 @@ func NewNotificationHandler(s *service.NotificationService) *NotificationHandler
 	return &NotificationHandler{service: s}
 }
 
-// POST /api/v1/notifications
 func (h *NotificationHandler) Create(c *gin.Context) {
 	tenantID, ok := middleware.TenantIDFromContext(c)
 	if !ok {
@@ -48,7 +47,6 @@ func (h *NotificationHandler) Create(c *gin.Context) {
 	apierror.Success(c, 201, notification)
 }
 
-// GET /api/v1/notifications/:id
 func (h *NotificationHandler) Get(c *gin.Context) {
 	tenantID, ok := middleware.TenantIDFromContext(c)
 	if !ok {
@@ -71,7 +69,6 @@ func (h *NotificationHandler) Get(c *gin.Context) {
 	apierror.Success(c, 200, notification)
 }
 
-// GET /api/v1/notifications  (list, paginated, filterable by status)
 func (h *NotificationHandler) List(c *gin.Context) {
 	tenantID, ok := middleware.TenantIDFromContext(c)
 	if !ok {
@@ -79,7 +76,7 @@ func (h *NotificationHandler) List(c *gin.Context) {
 		return
 	}
 
-	status := c.Query("status") // optional filter
+	status := c.Query("status") 
 	limit := c.DefaultQuery("limit", "20")
 	offset := c.DefaultQuery("offset", "0")
 

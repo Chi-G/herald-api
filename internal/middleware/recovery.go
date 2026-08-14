@@ -8,7 +8,6 @@ import (
 	"herald/pkg/apierror"
 )
 
-// Recovery recovers from panics and converts them into standardized JSON 500 responses.
 func Recovery() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {

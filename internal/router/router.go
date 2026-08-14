@@ -29,7 +29,7 @@ func New(deps Dependencies) *gin.Engine {
 
 	v1 := r.Group("/api/v1")
 	v1.Use(middleware.APIKeyAuth(deps.APIKeyRepo))
-	v1.Use(middleware.RateLimit()) // per-tenant token bucket, reads tenant_id set by auth middleware
+	v1.Use(middleware.RateLimit())
 	{
 		notifications := v1.Group("/notifications")
 		{

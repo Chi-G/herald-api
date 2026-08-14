@@ -12,12 +12,6 @@ import (
 	"herald/pkg/apierror"
 )
 
-// APIKeyAuth validates the `Authorization: Bearer hrld_live_xxx` header against
-// api_keys.key_hash, and sets tenant_id in the Gin context for downstream handlers.
-//
-// This is a "middleware factory": it takes the repo as a dependency and returns
-// the actual gin.HandlerFunc. This is how you inject dependencies into Gin
-// middleware without relying on globals.
 func APIKeyAuth(apiKeyRepo *repository.APIKeyRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		header := c.GetHeader("Authorization")
@@ -38,15 +32,12 @@ func APIKeyAuth(apiKeyRepo *repository.APIKeyRepository) gin.HandlerFunc {
 			return
 		}
 
-		// Stash tenant_id in the context — every handler downstream reads this,
-		// it's the single source of truth for "which tenant is this request for."
 		c.Set("tenant_id", apiKey.TenantID)
 
 		c.Next()
 	}
 }
 
-// TenantIDFromContext is a small helper so handlers don't repeat the type assertion.
 func TenantIDFromContext(c *gin.Context) (uuid.UUID, bool) {
 	val, exists := c.Get("tenant_id")
 	if !exists {

@@ -27,7 +27,6 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// 1. Initialize Database Connection Pool
 	dbPool, err := database.NewPostgresPool(ctx, cfg.DatabaseURL)
 	if err != nil {
 		log.Printf("Warning: Failed to connect to Postgres pool: %v (continuing with degraded/mock pool if offline)", err)
@@ -36,11 +35,9 @@ func main() {
 		log.Println("Successfully connected to PostgreSQL connection pool")
 	}
 
-	// 2. Instantiate Repositories
 	notificationRepo := repository.NewNotificationRepository(dbPool)
 	apiKeyRepo := repository.NewAPIKeyRepository(dbPool)
 
-	// 3. Register Channel Providers & Worker Dispatcher
 	emailProvider := providers.NewEmailProvider()
 	providerMap := map[models.NotificationChannel]worker.Provider{
 		models.ChannelEmail: emailProvider,
@@ -52,18 +49,15 @@ func main() {
 	workerCtx, cancelWorkers := context.WithCancel(context.Background())
 	defer cancelWorkers()
 
-	// Start Goroutine Worker Pool
 	workerPool.Start(workerCtx)
 	log.Printf("Started worker pool with %d workers", cfg.WorkerCount)
 
-	// 4. Instantiate Service & Handlers
 	notificationService := service.NewNotificationService(notificationRepo, workerPool)
 
 	notificationHandler := handlers.NewNotificationHandler(notificationService)
 	webhookHandler := handlers.NewWebhookHandler()
 	healthHandler := handlers.NewHealthHandler()
 
-	// 5. Wire Router
 	r := router.New(router.Dependencies{
 		NotificationHandler: notificationHandler,
 		WebhookHandler:      webhookHandler,
@@ -78,7 +72,6 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	// 6. Start HTTP Server in background goroutine
 	go func() {
 		log.Printf("Herald HTTP server starting on port %s...", cfg.Port)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -86,7 +79,6 @@ func main() {
 		}
 	}()
 
-	// 7. Graceful Shutdown listener
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
@@ -100,7 +92,6 @@ func main() {
 		log.Printf("HTTP server forced shutdown error: %v", err)
 	}
 
-	// Shutdown worker pool and flush queued jobs
 	workerPool.Shutdown()
 	log.Println("Herald server shut down cleanly.")
 }

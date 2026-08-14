@@ -26,8 +26,6 @@ const (
 	StatusCancelled NotificationStatus = "cancelled"
 )
 
-// Notification mirrors the `notifications` table.
-// Struct tags: `json` controls API serialization, `db` maps to pgx.Scan/StructScan columns.
 type Notification struct {
 	ID        uuid.UUID              `json:"id" db:"id"`
 	TenantID  uuid.UUID              `json:"tenant_id" db:"tenant_id"`
@@ -51,9 +49,7 @@ type Notification struct {
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
 
-// CreateNotificationRequest is what the API accepts on POST /notifications.
-// Kept separate from the DB model deliberately — the client should never be able
-// to set fields like Status or AttemptCount directly.
+
 type CreateNotificationRequest struct {
 	Channel   NotificationChannel    `json:"channel" binding:"required,oneof=email sms push"`
 	Recipient string                 `json:"recipient" binding:"required"`
